@@ -8,7 +8,7 @@ export const ChatHeader = () => {
         <img src={ucuLogo} alt="UCU Badge" className="h-9 w-9 object-contain rounded-full" />
       </div>
       <div>
-        <h1 className="font-display text-xl font-bold text-foreground">BBUC Assistant</h1>
+        <h1 className="font-display text-xl font-bold text-foreground">UCU-BBUC Assistant</h1>
         <p className="text-sm text-muted-foreground">Ask me anything about the university</p>
       </div>
       <div className="ml-auto flex items-center gap-2 text-sm text-accent">

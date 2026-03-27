@@ -95,7 +95,7 @@ const Dashboard = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-3xl font-bold text-foreground">
-            {userName ? `Welcome, ${userName}` : "Welcome to BBUC"}
+            {userName ? `Welcome, ${userName}` : "Welcome to UCU-BBUC"}
           </h1>
           <p className="text-muted-foreground mt-1">Your student information dashboard</p>
         </div>

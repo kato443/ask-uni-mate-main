@@ -3,7 +3,7 @@ interface SuggestedQuestionsProps {
 }
 
 const suggestedQuestions = [
-  "What programs does BBUC offer?",
+  "What programs does UCU-BBUC offer?",
   "How do I apply for Trinity intake?",
   "Where is the ICT lab located?",
   "What are the admission requirements?",

@@ -15,7 +15,7 @@ const Index = () => {
               <img src={ucuLogo} alt="UCU Logo" className="h-10 object-contain" />
             </div>
             <div className="hidden sm:block">
-              <span className="font-display font-bold text-lg text-foreground">BBUC</span>
+              <span className="font-display font-bold text-lg text-foreground">UCU-BBUC</span>
               <p className="text-xs text-muted-foreground">Bishop Barham University College</p>
             </div>
           </div>
@@ -33,7 +33,7 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
         <div className="absolute inset-0">
-          <img src={campusBg} alt="BBUC Campus" className="w-full h-full object-cover" />
+          <img src={campusBg} alt="UCU-BBUC Campus" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-[hsl(345_65%_15%/0.75)]"></div>
         </div>
         <div className="container mx-auto px-6 py-20 relative z-10">
@@ -74,7 +74,7 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <span className="text-accent font-semibold text-sm uppercase tracking-wider">About BBUC</span>
+              <span className="text-accent font-semibold text-sm uppercase tracking-wider">About UCU-BBUC</span>
               <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-2 mb-6">
                 A Legacy of Faith & Excellence Since 1924
               </h2>
@@ -127,7 +127,7 @@ const Index = () => {
               {
                 icon: MessageSquare,
                 title: "Instant Answers",
-                description: "Get immediate responses to your questions about programs, admissions, fees, and campus life at BBUC."
+                description: "Get immediate responses to your questions about programs, admissions, fees, and campus life at UCU-BBUC."
               },
               {
                 icon: BookOpen,
@@ -220,7 +220,7 @@ const Index = () => {
                   <img src={ucuLogo} alt="UCU Logo" className="h-8 object-contain" />
                 </div>
               <div>
-                <span className="font-display font-bold text-foreground">BBUC</span>
+                <span className="font-display font-bold text-foreground">UCU-BBUC</span>
                 <p className="text-xs text-muted-foreground">Uganda Christian University</p>
               </div>
             </div>

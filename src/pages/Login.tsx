@@ -34,7 +34,7 @@ const Login = () => {
 
     toast({
       title: "Welcome back!",
-      description: "You have successfully logged in to BBUC Portal.",
+      description: "You have successfully logged in to UCU-BBUC Portal.",
     });
     navigate("/dashboard");
   };
@@ -49,7 +49,7 @@ const Login = () => {
               <img src={ucuLogo} alt="UCU Logo" className="h-10 object-contain" />
             </div>
             <div>
-              <span className="font-display font-bold text-xl text-foreground">BBUC</span>
+              <span className="font-display font-bold text-xl text-foreground">UCU-BBUC</span>
               <p className="text-xs text-muted-foreground">Student Portal</p>
             </div>
           </Link>
@@ -118,6 +118,13 @@ const Login = () => {
             Don't have an account?{" "}
             <Link to="/signup" className="text-accent font-medium hover:underline">
               Register here
+            </Link>
+          </p>
+
+          <p className="text-center mt-3 text-sm text-muted-foreground/60">
+            Administrator?{" "}
+            <Link to="/admin/login" className="text-muted-foreground hover:text-foreground hover:underline transition-colors">
+              Admin sign in
             </Link>
           </p>
         </div>

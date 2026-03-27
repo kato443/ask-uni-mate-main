@@ -84,6 +84,7 @@ export type Database = {
           email: string
           enrollment_date: string | null
           id: string
+          is_admin: boolean
           location: string | null
           name: string
           phone: string | null
@@ -101,6 +102,7 @@ export type Database = {
           email?: string
           enrollment_date?: string | null
           id?: string
+          is_admin?: boolean
           location?: string | null
           name?: string
           phone?: string | null
@@ -118,6 +120,7 @@ export type Database = {
           email?: string
           enrollment_date?: string | null
           id?: string
+          is_admin?: boolean
           location?: string | null
           name?: string
           phone?: string | null

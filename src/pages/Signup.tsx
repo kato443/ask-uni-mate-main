@@ -72,7 +72,7 @@ const Signup = () => {
 
     toast({
       title: "Account created!",
-      description: "Welcome to BBUC Student Portal.",
+      description: "Welcome to UCU-BBUC Student Portal.",
     });
     navigate("/dashboard");
   };
@@ -97,7 +97,7 @@ const Signup = () => {
           </div>
           <p className="text-primary-foreground/60 text-sm uppercase tracking-wider mb-4">Est. 1924 • Kabale, Uganda</p>
           <h2 className="font-display text-2xl font-bold text-primary-foreground mb-4">
-            Join BBUC Student Portal
+            Join UCU-BBUC Student Portal
           </h2>
           <p className="text-primary-foreground/70 mb-8">
             Get instant access to information about admissions, programs, and campus life at Bishop Barham University College.
@@ -123,7 +123,7 @@ const Signup = () => {
               <img src={ucuLogo} alt="UCU Logo" className="h-10 object-contain" />
             </div>
             <div>
-              <span className="font-display font-bold text-xl text-foreground">BBUC</span>
+              <span className="font-display font-bold text-xl text-foreground">UCU-BBUC</span>
               <p className="text-xs text-muted-foreground">Student Portal</p>
             </div>
           </Link>
@@ -132,7 +132,7 @@ const Signup = () => {
             Create your account
           </h1>
           <p className="text-muted-foreground mb-8">
-            Register to access the BBUC student information system
+            Register to access the UCU-BBUC student information system
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -156,7 +156,7 @@ const Signup = () => {
                 id="studentId"
                 name="studentId"
                 type="text"
-                placeholder="BBUC/2024/001"
+                placeholder="UCU-BBUC/2024/001"
                 value={formData.studentId}
                 onChange={handleChange}
                 className="h-12"

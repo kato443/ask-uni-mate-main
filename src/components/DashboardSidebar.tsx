@@ -9,13 +9,15 @@ import {
   Settings, 
   LogOut,
   Menu,
-  X
+  X,
+  ShieldCheck
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import ucuLogo from "@/assets/ucu-logo.png";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
@@ -30,6 +32,7 @@ const DashboardSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { isAdmin } = useAdminCheck();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -75,7 +78,7 @@ const DashboardSidebar = () => {
               <img src={ucuLogo} alt="UCU Logo" className="h-8 object-contain" />
             </div>
             <div>
-              <span className="font-display font-bold text-lg text-sidebar-foreground">BBUC</span>
+              <span className="font-display font-bold text-lg text-sidebar-foreground">UCU-BBUC</span>
               <p className="text-xs text-sidebar-foreground/60">Student Portal</p>
             </div>
           </Link>
@@ -104,6 +107,21 @@ const DashboardSidebar = () => {
               )}
             </Link>
           ))}
+          {isAdmin && (
+            <Link
+              to="/admin"
+              onClick={() => setIsMobileOpen(false)}
+              className={cn(
+                "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 mt-2 border border-sidebar-border",
+                location.pathname.startsWith("/admin")
+                  ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+              )}
+            >
+              <ShieldCheck className="w-5 h-5" />
+              <span className="font-medium">Admin Panel</span>
+            </Link>
+          )}
         </nav>
 
         {/* Footer */}
