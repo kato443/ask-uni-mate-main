@@ -4,6 +4,7 @@ import {
   Users,
   MessagesSquare,
   MessageSquare,
+  BookOpen,
   ArrowLeft,
   ShieldCheck,
   LogOut,
@@ -20,6 +21,7 @@ const adminNavItems = [
   { icon: Users, label: "Users", path: "/admin/users" },
   { icon: MessagesSquare, label: "Messages", path: "/admin/messages" },
   { icon: MessageSquare, label: "Conversations", path: "/admin/conversations" },
+  { icon: BookOpen, label: "Knowledge Base", path: "/admin/knowledge-base" },
 ];
 
 const AdminSidebar = () => {

@@ -43,8 +43,8 @@ const Index = () => {
               <span className="text-sm text-primary-foreground/90">"God the Beginning and the End"</span>
             </div>
             <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground leading-tight mb-6 text-balance">
-              Bishop Barham
-              <span className="block text-accent">University College</span>
+              UCU-BBUC
+              <span className="block text-accent">Student Chatbot</span>
             </h1>
             <p className="text-lg md:text-xl text-primary-foreground/80 mb-6 max-w-2xl mx-auto">
               Student Information Chatbot System

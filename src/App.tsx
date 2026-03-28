@@ -20,6 +20,7 @@ import AdminOverview from "./pages/admin/AdminOverview";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminMessages from "./pages/admin/AdminMessages";
 import AdminConversations from "./pages/admin/AdminConversations";
+import AdminKnowledgeBase from "./pages/admin/AdminKnowledgeBase";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminSignup from "./pages/admin/AdminSignup";
 import NotFound from "./pages/NotFound";
@@ -54,6 +55,7 @@ const App = () => (
               <Route path="users" element={<AdminUsers />} />
               <Route path="messages" element={<AdminMessages />} />
               <Route path="conversations" element={<AdminConversations />} />
+              <Route path="knowledge-base" element={<AdminKnowledgeBase />} />
             </Route>
           </Route>
 

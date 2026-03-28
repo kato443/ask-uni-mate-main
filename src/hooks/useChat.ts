@@ -89,6 +89,39 @@ export const useChat = () => {
       await saveMessage(convId, "user", content.trim(), false);
     }
 
+    // Check database for automated replies
+    try {
+      const { data, error } = await supabase.from("auto_replies" as any).select("*");
+      const autoReplies = data as any[] | null;
+      if (!error && autoReplies && autoReplies.length > 0) {
+        const q = content.toLowerCase();
+        let matchedAnswer = null;
+        for (const entry of autoReplies) {
+          if (entry.keywords && entry.keywords.length > 0 && entry.keywords.every((kw: string) => q.includes(kw.toLowerCase()))) {
+            matchedAnswer = entry.answer;
+            break;
+          }
+        }
+        
+        if (matchedAnswer) {
+          const assistantId = (Date.now() + 1).toString();
+          setMessages((prev) => [
+            ...prev,
+            { id: assistantId, role: "assistant", content: matchedAnswer, timestamp: new Date() },
+          ]);
+          
+          if (convId) {
+            await saveMessage(convId, "assistant", matchedAnswer, true);
+            await markConversationResponded(convId);
+          }
+          setIsLoading(false);
+          return; // Short-circuit the AI API
+        }
+      }
+    } catch (e) {
+      console.warn("Auto-reply integration skipped:", e);
+    }
+
     // Prepare messages for API
     const apiMessages = [...messages.filter(m => m.id !== "welcome"), userMessage].map(m => ({
       role: m.role,
