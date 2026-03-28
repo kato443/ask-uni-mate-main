@@ -1,7 +1,20 @@
 import { useState, useEffect } from "react";
-import { Users, Search, GraduationCap } from "lucide-react";
+import { Users, Search, GraduationCap, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDistanceToNow } from "date-fns";
 
@@ -10,6 +23,28 @@ const AdminUsers = () => {
   const [filtered, setFiltered] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  const handleDeleteUser = async (userId: string) => {
+    try {
+      const { error } = await supabase.rpc('delete_admin_user', { target_user_id: userId });
+      if (error) throw error;
+      
+      setUsers(prev => prev.filter(u => u.user_id !== userId));
+      setFiltered(prev => prev.filter(u => u.user_id !== userId));
+      
+      toast({
+        title: "User deleted",
+        description: "The user has been successfully removed.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error deleting user",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -98,6 +133,7 @@ const AdminUsers = () => {
                     <th className="text-left pb-3 pr-4 text-muted-foreground font-medium hidden lg:table-cell">Program / Year</th>
                     <th className="text-right pb-3 pr-4 text-muted-foreground font-medium">Messages</th>
                     <th className="text-right pb-3 text-muted-foreground font-medium hidden sm:table-cell">Joined</th>
+                    <th className="text-right pb-3 pl-4 text-muted-foreground font-medium">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -143,6 +179,34 @@ const AdminUsers = () => {
                       </td>
                       <td className="py-3 text-right text-muted-foreground text-xs hidden sm:table-cell whitespace-nowrap">
                         {user.joinedAgo}
+                      </td>
+                      <td className="py-3 pl-4 text-right">
+                        {!user.is_admin && (
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:bg-destructive/10">
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This action cannot be undone. This will permanently delete the user's account and remove their data from the portal.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction 
+                                  onClick={() => handleDeleteUser(user.user_id)}
+                                  className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                                >
+                                  Delete account
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        )}
                       </td>
                     </tr>
                   ))}
