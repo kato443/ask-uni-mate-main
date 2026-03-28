@@ -3,35 +3,22 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, Eye, EyeOff, ArrowRight, KeyRound, UserPlus } from "lucide-react";
+import { ShieldCheck, Eye, EyeOff, ArrowRight, UserPlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
-const ADMIN_SECRET = import.meta.env.VITE_ADMIN_SECRET_KEY;
 
 const AdminSignup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [secretKey, setSecretKey] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showKey, setShowKey] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Validate secret key first — client-side guard
-    if (secretKey !== ADMIN_SECRET) {
-      toast({
-        title: "Invalid admin key",
-        description: "The secret key you entered is incorrect.",
-        variant: "destructive",
-      });
-      return;
-    }
 
     if (password.length < 8) {
       toast({
@@ -121,19 +108,8 @@ const AdminSignup = () => {
             Admin Registration
           </h2>
           <p className="text-sidebar-foreground/60 leading-relaxed">
-            Create a new administrator account. You must have a valid admin secret key issued by the
-            institution to complete registration.
+            Create a new administrator account to manage the UCU-BBUC portal, monitor user activity, and maintain the knowledge base.
           </p>
-          <div className="mt-6 p-4 rounded-xl bg-primary/10 border border-primary/20">
-            <div className="flex items-start gap-3">
-              <KeyRound className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-              <p className="text-xs text-sidebar-foreground/70">
-                The admin secret key is distributed by UCU-BBUC IT administration. Contact{" "}
-                <span className="text-sidebar-foreground font-medium">it@bbuc.ac.ug</span> if you
-                do not have one.
-              </p>
-            </div>
-          </div>
         </div>
 
         <p className="text-xs text-sidebar-foreground/40">
@@ -154,7 +130,7 @@ const AdminSignup = () => {
 
           <h1 className="font-display text-3xl font-bold text-foreground mb-2">Create admin account</h1>
           <p className="text-muted-foreground mb-8">
-            Fill in your details and enter the admin secret key
+            Fill in your details to create an admin account
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -205,32 +181,6 @@ const AdminSignup = () => {
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
-            </div>
-
-            {/* Secret key */}
-            <div className="space-y-2">
-              <Label htmlFor="secret" className="flex items-center gap-2">
-                <KeyRound className="w-3.5 h-3.5" />
-                Admin secret key
-              </Label>
-              <div className="relative">
-                <Input
-                  id="secret"
-                  type={showKey ? "text" : "password"}
-                  placeholder="Enter the admin secret key"
-                  value={secretKey}
-                  onChange={(e) => setSecretKey(e.target.value)}
-                  required
-                  className="h-12 pr-12"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowKey(!showKey)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {showKey ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>

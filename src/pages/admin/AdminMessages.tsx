@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import { MessagesSquare, Search } from "lucide-react";
+import { MessagesSquare, Search, Send, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDistanceToNow } from "date-fns";
 
@@ -14,12 +16,15 @@ const AdminMessages = () => {
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState<FilterTab>("all");
   const [loading, setLoading] = useState(true);
+  const [responses, setResponses] = useState<{ [key: string]: string }>({});
+  const [sending, setSending] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchMessages = async () => {
       const { data: msgs } = await supabase
         .from("messages")
-        .select("id, content, created_at, is_responded, user_id, role")
+        .select("id, content, created_at, is_responded, user_id, role, conversation_id")
         .eq("role", "user")
         .order("created_at", { ascending: false })
         .limit(200);
@@ -62,6 +67,55 @@ const AdminMessages = () => {
     }
     setFiltered(list);
   }, [search, tab, messages]);
+
+  const handleRespond = async (message: any) => {
+    const responseText = responses[message.id]?.trim();
+    if (!responseText) {
+      toast({
+        title: "Response required",
+        description: "Please enter a response before sending.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSending(message.id);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      setSending(null);
+      return;
+    }
+
+    const { error: insertError } = await supabase.from("messages").insert({
+      conversation_id: message.conversation_id,
+      user_id: user.id,
+      role: "assistant",
+      content: responseText,
+      is_responded: true,
+    });
+
+    if (insertError) {
+      toast({ title: "Error", description: "Failed to send response.", variant: "destructive" });
+      setSending(null);
+      return;
+    }
+
+    await supabase
+      .from("messages")
+      .update({ is_responded: true })
+      .eq("id", message.id);
+
+    toast({
+      title: "Response sent!",
+      description: "Your message has been delivered successfully.",
+    });
+
+    setResponses((prev) => ({ ...prev, [message.id]: "" }));
+    setMessages((prev) =>
+      prev.map((m) => (m.id === message.id ? { ...m, is_responded: true } : m))
+    );
+    setSending(null);
+  };
 
   const tabs: { key: FilterTab; label: string }[] = [
     { key: "all", label: "All" },
@@ -120,27 +174,56 @@ const AdminMessages = () => {
               {filtered.map((msg) => (
                 <div
                   key={msg.id}
-                  className="flex items-start justify-between p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors gap-4"
+                  className="flex flex-col p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors gap-4"
                 >
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-foreground line-clamp-2">{msg.content}</p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      <span className="font-medium">{msg.userName}</span>
-                      {msg.userEmail && msg.userName !== msg.userEmail && (
-                        <span className="text-muted-foreground/70"> · {msg.userEmail}</span>
-                      )}
-                      {" · "}{msg.timeAgo}
-                    </p>
+                  <div className="flex items-start justify-between gap-4 w-full">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-foreground">{msg.content}</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        <span className="font-medium">{msg.userName}</span>
+                        {msg.userEmail && msg.userName !== msg.userEmail && (
+                          <span className="text-muted-foreground/70"> · {msg.userEmail}</span>
+                        )}
+                        {" · "}{msg.timeAgo}
+                      </p>
+                    </div>
+                    <span
+                      className={`shrink-0 px-3 py-1 rounded-full text-xs font-medium ${
+                        msg.is_responded
+                          ? "bg-emerald-500/10 text-emerald-600"
+                          : "bg-amber-500/10 text-amber-600"
+                      }`}
+                    >
+                      {msg.is_responded ? "Replied" : "Pending"}
+                    </span>
                   </div>
-                  <span
-                    className={`shrink-0 px-3 py-1 rounded-full text-xs font-medium ${
-                      msg.is_responded
-                        ? "bg-emerald-500/10 text-emerald-600"
-                        : "bg-amber-500/10 text-amber-600"
-                    }`}
-                  >
-                    {msg.is_responded ? "Replied" : "Pending"}
-                  </span>
+                  
+                  {!msg.is_responded && (
+                    <div className="w-full mt-2 space-y-3 bg-background p-3 rounded-md border border-border">
+                      <Textarea
+                        placeholder="Type your response here..."
+                        value={responses[msg.id] || ""}
+                        onChange={(e) =>
+                          setResponses((prev) => ({ ...prev, [msg.id]: e.target.value }))
+                        }
+                        className="min-h-[80px] resize-none text-sm"
+                      />
+                      <div className="flex justify-end">
+                        <Button
+                          size="sm"
+                          onClick={() => handleRespond(msg)}
+                          disabled={sending === msg.id}
+                        >
+                          {sending === msg.id ? (
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          ) : (
+                            <Send className="w-4 h-4 mr-2" />
+                          )}
+                          Send Reply
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
