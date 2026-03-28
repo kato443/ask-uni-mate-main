@@ -28,6 +28,20 @@ const Signup = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    const lowerEmail = formData.email.toLowerCase();
+    const isValidStudentEmail = lowerEmail.endsWith('@ucu.ac.ug') || 
+                              lowerEmail.endsWith('@bbuc.ac.ug') || 
+                              lowerEmail.endsWith('@students.ucu.ac.ug');
+                               
+    if (!isValidStudentEmail) {
+      toast({
+        title: "Registration Restricted",
+        description: "Please use your official UCU or BBUC student email address (@ucu.ac.ug or @bbuc.ac.ug).",
+        variant: "destructive"
+      });
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: "Passwords don't match",

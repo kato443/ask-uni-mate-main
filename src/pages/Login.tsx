@@ -18,6 +18,21 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const lowerEmail = email.toLowerCase();
+    const isValidStudentEmail = lowerEmail.endsWith('@ucu.ac.ug') || 
+                              lowerEmail.endsWith('@bbuc.ac.ug') || 
+                              lowerEmail.endsWith('@students.ucu.ac.ug');
+                              
+    if (!isValidStudentEmail) {
+      toast({
+        title: "Access Denied",
+        description: "Only UCU or BBUC student emails are allowed.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
